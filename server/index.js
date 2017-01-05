@@ -15,14 +15,13 @@ const webcrawl = (url) => {
     uri: url
   })
   .then(results => {
-    console.log(results.slice(0, 30000))
     const $ = cheerio.load(results);
     const title = $('title').text();
     const linkArray = [];
     $('body').find('a').each(function(i, obj) {
       linkArray.push($(obj).attr('href'));
     });
-    Page.findOrCreate({
+    Page.create({
       title,
       url,
       textContent: results,
@@ -32,9 +31,10 @@ const webcrawl = (url) => {
       Page.findOne({where: {
         url
       }})
+      .then(results => console.log(results || url));
     });
   });
 }
 
-webcrawl('https://www.nytimes.com');
+webcrawl('https://www.fullstackacademy.com');
 
