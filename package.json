@@ -1,0 +1,30 @@
+{
+  "name": "foogle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanDriscoll/foogle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyanDriscoll/foogle/issues"
+  },
+  "homepage": "https://github.com/RyanDriscoll/foogle#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cheerio": "^0.22.0",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "nodemon": "^1.11.0",
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "request-turtle": "0.0.2",
+    "sequelize": "^3.28.0"
+  }
+}

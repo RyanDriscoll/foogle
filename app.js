@@ -1,52 +1,25 @@
-var Sequelize = require('sequelize');
-var db = new Sequelize('postgres://localhost:5432/webcrawler');
+const express = require('express');
+const app = express();
+const {Page, Domain, db} = require('./models');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
-domainSchema = {
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-}
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-var Domain = db.define('domain', domainSchema)
+app.use(morgan('dev'));
 
-pageSchema = {
-    // defined by <head> <title> title goes here </title> </head>
-    title: {
-        type: Sequelize.STRING,
-        allowNull: false   // just store an empty string
-    },
-    // The precise URL where this page is located
-    url: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-            isUrl: true
-        }
-    },
-    // A string containing a concatenated form of all text strings from this page
-    textContent: {
-        type: Sequelize.TEXT,
-        allowNull: false
-    },
-    // The status code returned upon retrieving this page
-    status: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-}
+app.get(require('./server'));
 
-var Page = db.define('page', pageSchema)
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).send(err.stack);
+});
 
+db.sync()
+.then(function() {
+  app.listen(3001);
+  console.log('listening on port 3001');
+})
+.catch(err => console.error(err.stack));
 
-Page.belongsToMany(Page, { as: 'outboundLinks', through: 'links', foreignKey: 'linker' });
-Page.belongsToMany(Page, { as: 'inboundLinks', through: 'links', foreignKey: 'linkee' });
-
-Domain.hasMany(Page);
-
-
-module.exports = {
-    db: db,
-    Page: Page,
-    Domain: Domain
-}
+module.exports = app;
